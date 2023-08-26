@@ -1,1 +1,1 @@
-export const test = (name: string) => name
+export { DictionaryBranch, DictionaryProps, PassedDictionaryProps } from './types/index.js'

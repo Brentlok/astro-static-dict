@@ -1,25 +1,19 @@
 import typescript from '@rollup/plugin-typescript'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
 
 export default [
-    {
-        input: 'index.ts',
-        output: {
-          file: 'dist/index.js',
-          format: 'esm',
-        },
-        plugins: [typescript({
-          declaration: true,
-          declarationDir: 'dist',
-          exclude: './after_build.ts'
-        })],
-    },
     {
         input: 'client/index.ts',
         output: {
           file: 'dist/client/index.js',
           format: 'esm',
         },
-        plugins: [typescript()],
+        plugins: [typescript({
+            declaration: true,
+            declarationDir: 'dist',
+            exclude: './after_build.ts'
+        })],
     },
     {
         input: 'server/index.ts',
@@ -35,6 +29,6 @@ export default [
           file: 'dist/integration/index.js',
           format: 'esm',
         },
-        plugins: [typescript()],
+        plugins: [typescript(), nodeResolve(), commonjs()],
     },
 ]
