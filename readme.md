@@ -41,7 +41,7 @@ You can initialize new dictionary with ``initDictionary`` method imported from `
 
 | Property        | Type                       | Description                                                                                                                               |
 |-----------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| dictionary      | DictionaryBranch           | Default dictionary used for development and build process, it is also used for typing your created dictionary.                            |
+| dictionary      | DictionaryBranch           | Default dictionary used for development, it is also used for typing your created dictionary.                                              |
 | isDev           | boolean                    | Always pass import.meta.env.DEV into it                                                                                                   |
 | keySeparator    | string                     | Default: `@@@` <br> Used to separate dictionary keys in build process                                                                     |
 | keySuffix       | string                     | Default: `!!!` <br> Used to end data-dict attribute in build process                                                                      |
@@ -56,6 +56,7 @@ import { enUs, plPl } from 'lib/locale'
 export default defineConfig({
     integrations: [
         astroStaticDict({
+            dictionary: enUs,
             dictionaries: {
                 enUs,
                 plPl
@@ -69,6 +70,7 @@ export default defineConfig({
 
 | Property        | Type                             | Description                                                                                                                               |
 |-----------------|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| dictionary      | DictionaryBranch                 | Default language dictionary for build process                                                                                             |
 | dictionaries    | Record<string, DictionaryBranch> | All your dictionaries that will be transformed into JSON files                                                                            |
 | keySeparator    | string                           | Default: `!!!` <br> Must be the same as initDictionary's keySeparator                                                                     |
 | keySuffix       | string                           | Default: `!!!` <br> Must be the same as initDictionary's keySuffix                                                                        |
