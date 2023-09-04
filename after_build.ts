@@ -1,4 +1,11 @@
 import fs from 'fs'
 
-fs.copyFileSync('publish.json', 'dist/package.json')
-fs.copyFileSync('readme.md', 'dist/readme.md')
+const copy = {
+    'publish.json': 'package.json',
+    'readme.md': 'readme.md',
+    'LICENSE': 'LICENSE',
+}
+
+Object.keys(copy).forEach((src) => {
+    fs.copyFileSync(src, `dist/${copy[src as keyof typeof copy]}`)
+})
