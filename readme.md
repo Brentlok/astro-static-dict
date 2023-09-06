@@ -1,6 +1,14 @@
 # Astro static dict
 Astro static dict is a library for lightweight client side language change for [Astro](https://astro.build)
 
+### Installation
+
+```
+npm install astro-static-dict
+yarn add astro-static-dict
+```
+### [Live demo](https://codesandbox.io/p/sandbox/dreamy-murdock-mg8qf8?file=/src/pages/index.astro:1,1)
+
 ### Motivation
 We dont really want to use another frameworks (react, svelte, solid...) just to change language on client side, and according to [Astro documentation](https://docs.astro.build/en/recipes/i18n) we should be building separated HTML for each language. This is fine, but it can feel pretty slow and page refresh is not the best for user experience.
 
