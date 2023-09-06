@@ -21,11 +21,7 @@ export default [
           file: 'dist/client/index.js',
           format: 'esm',
         },
-        plugins: [typescript({
-            declaration: true,
-            declarationDir: 'dist',
-            exclude: './after_build.ts'
-          })],
+        plugins: [typescript()],
     },
     {
         input: 'server/index.ts',
