@@ -43,14 +43,13 @@ export const astroStaticDict = <TDictionary extends DictionaryBranch>({
                 const parseNodes = (nodes: Array<Node>) => {
                     nodes.forEach(node => {
                         if (node instanceof TextNode) {
-                            const matched = node.text.match(new RegExp(`.*${keySeparator}.*${keySuffix}`))
+                            const matched = node.text.match(new RegExp(`[\\w|_|-|${keySeparator}]+${keySuffix}`, 'g'))
 
                             if (!matched) {
                                 return
                             }
 
-                            const dictValue = matched.reduce((acc, dictKeyRaw) => {
-                                const dictKey = dictKeyRaw.trim()
+                            const dictValue = matched.reduce((acc, dictKey, index) => {
                                 const value = getDictValue({
                                     dictionary,
                                     dictKey,
@@ -58,10 +57,14 @@ export const astroStaticDict = <TDictionary extends DictionaryBranch>({
                                     keySuffix
                                 })
 
-                                node.parentNode.setAttribute('data-dict', dictKey)
-                                
-                                return `${acc}${dictKeyRaw.replace(dictKey, value)}`
-                            }, '')
+                                const dataAttr = index === 0
+                                    ? 'data-dict'
+                                    : `data-dict-${index}`
+
+                                node.parentNode.setAttribute(dataAttr, dictKey)
+
+                                return acc.replace(dictKey, value)
+                            }, node.text)
 
                             node.textContent = dictValue
 

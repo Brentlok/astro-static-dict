@@ -1,3 +1,5 @@
+import { DictionaryBranch } from "./index.ts"
+
 export declare global {
     type ChangeLanguageEvent = Event & {
         detail: string
@@ -8,6 +10,8 @@ export declare global {
     }
 
     interface Window {
-        changeLanguage(newLanguage: string): void
+        changeLanguage(newLanguage: string): void,
+        selectedLanguage: string,
+        cachedDictionaries: Partial<Record<string, DictionaryBranch>>
     }
 }

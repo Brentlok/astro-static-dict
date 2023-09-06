@@ -12,41 +12,82 @@ const changeLanguageOnPage = ({
     keySeparator,
     keySuffix
 }: ChangeLanguageOnPageProps) => {
-    document.querySelectorAll('[data-dict]').forEach(element => {
-        const dictKey = element.getAttribute('data-dict')
+    const oldDict = window.cachedDictionaries[window.selectedLanguage]
+
+    if (!oldDict) {
+        throw new Error('Old dictionary not found')
+    }
+
+    const replaceText = (element: Element, index: number) => {
+        const dataAttr = index === 0
+            ? 'data-dict'
+            : `data-dict-${index}`
+        const dictKey = element.getAttribute(dataAttr)
 
         if (!dictKey) {
             return
         }
 
-        const dictValue = getDictValue({
+        const oldDictValue = getDictValue({
+            dictionary: oldDict,
+            dictKey,
+            keySeparator,
+            keySuffix
+        })
+        const newDictValue = getDictValue({
             dictionary: newDict,
             dictKey,
             keySeparator,
             keySuffix
         })
 
-        element.textContent = dictValue
-    })
+        if (element.textContent) {
+            element.textContent = element.textContent.replace(oldDictValue, newDictValue)
+
+            replaceText(element, index + 1)
+        }
+    }
+
+    document.querySelectorAll('[data-dict]').forEach(element => replaceText(element, 0))
 }
 
 type WatchChangeLanguageProps = {
+    cachedDictionaries: Record<string, DictionaryBranch>,
+    defaultLanguage: string,
     keySeparator?: string,
     keySuffix?: string
 }
 
-export const watchLanguageChange = (props?: WatchChangeLanguageProps) => {
-    const { keySeparator = '@@@', keySuffix = '!!!' } = props || {}
+export const watchLanguageChange = ({
+    cachedDictionaries,
+    defaultLanguage,
+    keySeparator = '@@@',
+    keySuffix = '!!!'
+}: WatchChangeLanguageProps) => {
+    window.cachedDictionaries = cachedDictionaries
+    window.selectedLanguage = defaultLanguage
+
+    const getDictionary = async (language: string) => {
+        if (language in window.cachedDictionaries) {
+            return window.cachedDictionaries[language]
+        }
+
+        const dictionaryResponse = await fetch(`/dictionary/${language}.json`)
+        const dictionary = await dictionaryResponse.json()
+
+        window.cachedDictionaries[language] = dictionary
+
+        return dictionary
+    }
 
     const handler = async (event: ChangeLanguageEvent) => {
         try {
-            const res = await fetch(`/dictionary/${event.detail}.json`)
-
             changeLanguageOnPage({
-                newDict: await res.json(),
+                newDict: await getDictionary(event.detail),
                 keySeparator,
                 keySuffix
             })
+            window.selectedLanguage = event.detail
         } catch (error) {
             console.error(`Dictionary for language ${event.detail} not found`)
         }
