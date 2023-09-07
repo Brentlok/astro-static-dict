@@ -80,6 +80,10 @@ export const astroStaticDict = <TDictionary extends DictionaryBranch>({
                 }
 
                 await Promise.all(routes.map(async ({ distURL: { pathname } }) => {
+                    if (!pathname.endsWith('.html')) {
+                        return
+                    }
+
                     const file = await readFile(pathname, 'utf8')
                     const root = parse(file)
                     const body = root.querySelector('body')
