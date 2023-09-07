@@ -80,19 +80,28 @@ export const watchLanguageChange = ({
         return dictionary
     }
 
-    const handler = async (event: ChangeLanguageEvent) => {
+    const handler = async (newLanguage: string) => {
         try {
             changeLanguageOnPage({
-                newDict: await getDictionary(event.detail),
+                newDict: await getDictionary(newLanguage),
                 keySeparator,
                 keySuffix
             })
-            window.selectedLanguage = event.detail
+            window.selectedLanguage = newLanguage
         } catch (error) {
-            console.error(`Dictionary for language ${event.detail} not found`)
+            console.error(`Dictionary for language ${newLanguage} not found`)
         }
     }
 
     window.changeLanguage = (newLanguage: string) => window.dispatchEvent(new CustomEvent('changeLanguage', { detail: newLanguage }))
-    window.addEventListener('changeLanguage', handler)
+    window.addEventListener('changeLanguage', event => handler(event.detail))
+    document.addEventListener('astro:after-swap', () => {
+        if (defaultLanguage === window.selectedLanguage) {
+            return
+        }
+
+        const selectedLanguage = window.selectedLanguage
+        window.selectedLanguage = defaultLanguage
+        handler(selectedLanguage)
+    })
 }

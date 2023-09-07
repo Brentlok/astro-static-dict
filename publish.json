@@ -1,7 +1,7 @@
 {
     "author": "brentlok",
     "name": "astro-static-dict",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "main": "index.js",
     "repository": "https://github.com/Brentlok/astro-static-dict",
     "keywords": "astro, ts, dictionary, static-site-generator",
