@@ -85,22 +85,28 @@ export default defineConfig({
 
 ## Client
 
-```astro
-<script>
-    import { watchLanguageChange } from 'astro-static-dict/client'
+```ts
+import { watchLanguageChange } from 'astro-static-dict/client'
+import { enUs } from 'lib/locale'
 
-    watchLanguageChange()
-</script>
+watchLanguageChange({
+    cachedDictionaries: {
+        enUs
+    },
+    defaultLanguage: 'enUs'
+})
 ```
 
 It listens for changeLanguage event - when this event is trigerred it downloads dictionary in JSON format and replaces every text node on website.
 
-#### watchLanguageChange config (optional)
+#### watchLanguageChange config
 
-| Property        | Type                       | Description                                                                                                                               |
-|-----------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| keySeparator    | string                     | Default: `@@@` <br> Must be the same as initDictionary's keySeparator                                                                     |
-| keySuffix       | string                     | Default: `!!!` <br> Must be the same as initDictionary's keySuffix                                                                        |
+| Property           | Type                               | Description                                                                                                                                |
+|--------------------|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| cachedDictionaries | Record<string, DictionaryBranch>   | Dictionaries that will be injected into window.cachedDictionaries, you must include dictionary used in build process but more is up to you |
+| defaultLanguage    | string                             | <br> Name of default language used on a page. Must be the same as dictionary used in build process                                         |
+| keySeparator       | string                             | Default: `@@@` <br> Must be the same as initDictionary's keySeparator                                                                      |
+| keySuffix          | string                             | Default: `!!!` <br> Must be the same as initDictionary's keySuffix                                                                         |
 
 #### Trigger language change
 
@@ -110,4 +116,14 @@ interface Window {
 }
 // or
 window.dispatchEvent(new CustomEvent('changeLanguage', { detail: newLanguage }))
+```
+
+### Window modified properties
+
+```ts
+interface Window {
+    changeLanguage(newLanguage: string): void,
+    selectedLanguage: string,
+    cachedDictionaries: Partial<Record<string, DictionaryBranch>>
+}
 ```
