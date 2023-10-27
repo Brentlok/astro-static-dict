@@ -43,7 +43,7 @@ export const astroStaticDict = <TDictionary extends DictionaryBranch>({
                 const parseNodes = (nodes: Array<Node>) => {
                     nodes.forEach(node => {
                         if (node instanceof TextNode) {
-                            const matched = node.text.match(new RegExp(`[\\w|_|-|${keySeparator}]+${keySuffix}`, 'g'))
+                            const matched = node.text.match(new RegExp(`[\\w|_|\/|\-|-|${keySeparator}]+${keySuffix}`, 'g'))
 
                             if (!matched) {
                                 return
